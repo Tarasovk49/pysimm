@@ -3230,15 +3230,17 @@ class System(object):
             for p in sorted(m.particles, key=lambda x: x.tag):
                 if p.type:
                     out.write(
-                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
-                            'ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, 
-                            p.molecule.tag, p.x, p.y, p.z, '', p.type.elem
+                        # resname and resid attributes are also written to pdb
+                        '{:<6}{:>5} {:>4} {:3}  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.atomname, p.resname,
+                            p.resid, p.x, p.y, p.z, '', p.type.elem
                         )
                     )
                 elif p.elem:
                     out.write(
-                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
-                            'ATOM', p.tag, p.elem, p.molecule.tag, 
+                        # RESNAME and RESID attributes are also written to pdb
+                        '{:<6}{:>5} {:>4} {:3}  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.elem, p.resname, p.resid, 
                             p.x, p.y, p.z, '', p.elem
                         )
                     )
@@ -4599,7 +4601,11 @@ def read_mol(mol_file, type_with=None, version='V2000'):
             elif p.charge == 5:
                 p.linker = True
                 p.charge = 0
-
+                #### TO WRITE ATOMNAMES TO PDB FROM MOL FILE
+                p.atomname = p.elem
+                p.elem = p.elem[:1]
+                ####
+                
         for n in range(nbonds):
             line = f.next()
             a, b, order = map(int, line.split()[:3])
