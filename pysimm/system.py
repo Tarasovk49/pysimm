@@ -4601,7 +4601,7 @@ def read_mol(mol_file, type_with=None, version='V2000'):
             elif p.charge == 5:
                 p.linker = True
                 p.charge = 0
-                #### TO WRITE ATOMNAMES TO PDB FROM MOL FILE
+                #### Read atomnames from MOL file
                 p.atomname = p.elem
                 p.elem = p.elem[:1]
                 ####
