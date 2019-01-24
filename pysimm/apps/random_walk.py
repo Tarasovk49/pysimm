@@ -125,8 +125,12 @@ def copolymer(m, nmon, s_=None, **kwargs):
     
     if traj:
         s.write_xyz('random_walk.xyz')
-
+        
     temp_nmon = 1
+    
+### Variable for counting residue number
+    res_count = 1
+
 
     while True:
 
@@ -144,6 +148,8 @@ def copolymer(m, nmon, s_=None, **kwargs):
             p_ -= 1
 
         for insert in range(p_):
+### res_count increases with every new residue
+            res_count += 1
 
             head = None
             tail = None
@@ -177,6 +183,10 @@ def copolymer(m, nmon, s_=None, **kwargs):
 
             n = m_.copy()
 
+### Residue number (res_count) is passed to resid attribute of particle            
+            for p in n.particles:
+                p.resid = res_count           
+            
             if capped:
                 s.particles.remove(s.particles.count)
                 s.remove_spare_bonding()
